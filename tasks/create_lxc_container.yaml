@@ -1,15 +1,16 @@
 ---
 - name: 'Create LXC container.'
+  delegate_to: "{{ proxmox_api_host }}"
   community.general.proxmox:
-    vmid: "{{ container.vm_id }}"
+    vmid: "{{ vm_id }}"
     api_user: 'root@pam'
     api_password: "{{ proxmox_api_password }}"
     api_host: "{{ proxmox_api_host }}"
     node: "{{ proxmox_api_host }}"
     pubkey: "{{ ssh_public_key }}"
-    hostname: "{{ container.inventory_hostname }}"
+    hostname: "{{ inventory_hostname }}"
     ostemplate: "{{ docker_host_template }}"
-    netif: '{"net0":"type=veth,name=eth0,ip=dhcp,bridge=vmbr0,firewall=1,hwaddr={{ container.mac_address }}"}'
+    netif: '{"net0":"type=veth,name=eth0,ip=dhcp,bridge=vmbr0,firewall=1,hwaddr={{ mac_address }}"}'
     proxmox_default_behavior: 'no_defaults'
     state: 'present'
     disk: '24'
@@ -23,8 +24,9 @@
     features: 'mount=nfs,keyctl=1'
 
 - name: 'Start LXC container.'
+  delegate_to: "{{ proxmox_api_host }}"
   community.general.proxmox:
-    vmid: "{{ container.vm_id }}"
+    vmid: "{{ vm_id }}"
     state: 'started'
     api_user: 'root@pam'
     api_password: "{{ proxmox_api_password }}"
